@@ -1,4 +1,4 @@
-import User from "../../modules/user/model/User.js";
+import User from "../model/User.js";
 
 class UserRepository {
 
