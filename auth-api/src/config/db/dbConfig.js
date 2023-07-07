@@ -1,7 +1,8 @@
 import {Sequelize} from "sequelize";
 
-const sequelize = new Sequelize("auth-db","postgres","123456", {
+const sequelize = new Sequelize("auth-db","admin","123456", {
     host: "localhost",
+    port: "5434",
     dialect: "postgres",
     quoteIdentifiers: false,
     define:{
