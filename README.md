@@ -58,6 +58,12 @@ Make sure you have the following software installed on your system:
 
 5. Deployment:
     - Deploy the application to AWS using the provided deployment scripts or by following the AWS documentation.
+  
+### **Local Running**
+
+1. Go through shopping-system directory on CMD
+2. Run docker-compose up --build
+   - note: Containers **must** be linux
 
 ## **Contributing**
 Contributions are welcome! If you have any ideas or improvements for the project, please submit a pull request. Make sure to follow the existing code style and provide detailed information about the changes you made.
