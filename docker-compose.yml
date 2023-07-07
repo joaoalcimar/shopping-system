@@ -1,6 +1,16 @@
 version: "3"
 services:
 
+  auth-api:
+    build: './auth-api'
+    container_name: auth-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - PORT=8080
+    ports:
+      - "8080:8080"
+
   auth-db:
     image: postgres:11
     container_name: auth-db
@@ -12,6 +22,14 @@ services:
     ports:
       - "5434:5432"
 
+  product-api:
+    build: './product-api'
+    container_name: product-api
+    environment:
+      - PORT=8081
+    ports:
+      - "8081:8081"
+
   product-db:
     image: postgres:11
     container_name: product-db
@@ -22,6 +40,14 @@ services:
       - POSTGRES_PASSWORD=123456
     ports:
       - "5433:5432"
+
+  sales-api:
+    build: './sales-api'
+    container_name: sales-api
+    environment:
+      - PORT=8082
+    ports:
+      - "8082:8082"
 
   sales-db:
     image: tutum/mongodb
