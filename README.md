@@ -63,7 +63,9 @@ Make sure you have the following software installed on your system:
 
 1. Go through shopping-system directory on CMD
 2. Run docker-compose up --build
-   - note: Containers **must** be linux
+   - notes:
+       - Containers **must** be linux
+       - Ports 5433, 5434, 5672, 8080, 8081, 8082, 15672, 25676, 27017, 28017 must be free
 
 ## **Contributing**
 Contributions are welcome! If you have any ideas or improvements for the project, please submit a pull request. Make sure to follow the existing code style and provide detailed information about the changes you made.
