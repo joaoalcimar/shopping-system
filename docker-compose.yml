@@ -2,9 +2,10 @@ version: "3"
 services:
 
   auth-api:
-    network_mode: host
     build: './auth-api'
     container_name: auth-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - PORT=8080
     ports:
@@ -22,7 +23,6 @@ services:
       - "5434:5432"
 
   product-api:
-    network_mode: host
     build: './product-api'
     container_name: product-api
     environment:
@@ -42,7 +42,6 @@ services:
       - "5433:5432"
 
   sales-api:
-    network_mode: host
     build: './sales-api'
     container_name: sales-api
     environment:
