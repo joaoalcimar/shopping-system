@@ -1,5 +1,4 @@
 import User from "../../modules/user/model/User.js";
-import {where} from "sequelize";
 
 class UserRepository {
 
