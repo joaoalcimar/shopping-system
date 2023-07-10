@@ -9,11 +9,14 @@ class UserService {
 
     async findByEmail(req) {
         try{
+
             const {email} = req.params;
             this.validateRequestData(email);
 
             let user = await UserRepository.findByEmail(email);
             this.validateUserNotFound(user);
+
+            this.validateAuthenticatedUser(user, req.authUser);
 
             return {
                 status: httpStatus.SUCCESS,
@@ -36,16 +39,26 @@ class UserService {
         if(!email) {
             throw new UserException(
                 httpStatus.BAD_REQUEST,
-                "User email was no t informed."
+                "User email was not informed."
             );
         }
     }
 
     validateUserNotFound(user) {
+        //TODO change architecture to user being incapable of discover registered emails
         if(!user){
             throw new UserException(
                 httpStatus.NOT_FOUND,
-                "User email was no t informed."
+                "Invalid user email."
+            );
+        }
+    }
+
+    validateAuthenticatedUser(user, authUser){
+        if(!authUser || user.id !== authUser.id){
+            throw new UserException(
+                httpStatus.FORBIDDEN,
+                "You are not authorized to see this data."
             );
         }
     }
