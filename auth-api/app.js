@@ -1,6 +1,7 @@
 import express from "express";
 import { createInitialData } from "./src/config/db/initialData.js";
 import userRoute from "./src/modules/user/route/UserRoute.js";
+import checkToken from "./src/config/auth/checkToken.js";
 
 const app = express();
 const env = process.env;
@@ -12,6 +13,8 @@ createInitialData();
 app.use(express.json());
 
 app.use(userRoute);
+
+app.use(checkToken);
 
 app.get('/api/status', (req, res) => {
     return res.status(200).json({
