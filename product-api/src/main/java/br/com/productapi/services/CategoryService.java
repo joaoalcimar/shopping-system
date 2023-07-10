@@ -7,6 +7,9 @@ import br.com.productapi.models.entities.Category;
 import br.com.productapi.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.xml.bind.ValidationException;
+
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
@@ -22,10 +25,17 @@ public class CategoryService {
         return CategoryResponse.of(category);
     }
 
-    public void validateCategoryDescription(CategoryRequest request){
+    private void validateCategoryDescription(CategoryRequest request){
         if(isEmpty(request.getDescription())){
             throw new EmptyStringException("The category description was not informed.");
         }
+    }
+
+    public Category findById(Integer id) throws ValidationException {
+
+        return categoryRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("There is no category for the given id."));
     }
 
 }
