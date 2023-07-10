@@ -16,14 +16,16 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     public CategoryResponse save(CategoryRequest request){
-        validateCategoryName(request);
+        validateCategoryDescription(request);
+
         Category category = categoryRepository.save(Category.of(request));
         return CategoryResponse.of(category);
     }
 
-    public void validateCategoryName(CategoryRequest request){
+    public void validateCategoryDescription(CategoryRequest request){
         if(isEmpty(request.getDescription())){
             throw new EmptyStringException("The category description was not informed.");
         }
     }
+
 }

@@ -1,7 +1,6 @@
 package br.com.productapi.models.entities;
 
 import br.com.productapi.models.dtos.requests.CategoryRequest;
-import br.com.productapi.models.dtos.responses.CategoryResponse;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
