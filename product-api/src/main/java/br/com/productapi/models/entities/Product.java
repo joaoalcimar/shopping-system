@@ -1,4 +1,4 @@
-package br.com.productapi.models;
+package br.com.productapi.models.entities;
 
 import lombok.Data;
 
