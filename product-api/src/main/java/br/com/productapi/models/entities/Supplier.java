@@ -1,6 +1,8 @@
 package br.com.productapi.models.entities;
 
+import br.com.productapi.models.dtos.requests.SupplierRequest;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 
@@ -15,4 +17,10 @@ public class Supplier {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    public static Supplier of(SupplierRequest request){
+        Supplier supplier = new Supplier();
+        BeanUtils.copyProperties(request, supplier);
+        return supplier;
+    }
 }
