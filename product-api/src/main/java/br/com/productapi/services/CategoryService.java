@@ -1,14 +1,13 @@
 package br.com.productapi.services;
 
 import br.com.productapi.exceptions.EmptyStringException;
+import br.com.productapi.exceptions.ValidationException;
 import br.com.productapi.models.dtos.requests.CategoryRequest;
 import br.com.productapi.models.dtos.responses.CategoryResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.xml.bind.ValidationException;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -31,7 +30,7 @@ public class CategoryService {
         }
     }
 
-    public Category findById(Integer id) throws ValidationException {
+    public Category findById(Integer id){
 
         return categoryRepository
                 .findById(id)
