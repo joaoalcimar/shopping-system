@@ -9,6 +9,9 @@ import br.com.productapi.repositories.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
@@ -19,14 +22,14 @@ public class SupplierService {
 
     public SupplierResponse save(SupplierRequest request){
 
-        validateSupplierName(request);
+        validateSupplierName(request.getName());
         Supplier supplier = supplierRepository.save(Supplier.of(request));
         return SupplierResponse.of(supplier);
     }
 
-    private void validateSupplierName(SupplierRequest request){
+    private void validateSupplierName(String name){
 
-        if(isEmpty(request.getName())){
+        if(isEmpty(name)){
             throw new EmptyStringException("The supplier name was not informed.");
         }
     }
@@ -36,5 +39,27 @@ public class SupplierService {
         return supplierRepository
                 .findById(id)
                 .orElseThrow(() -> new ValidationException("There is no supplier for the given id."));
+    }
+
+    public List<SupplierResponse> findByName(String name){
+        validateSupplierName(name);
+
+        return supplierRepository.findByNameIgnoreCaseContaining(name)
+                .stream()
+                .map(SupplierResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<SupplierResponse> findByAll(){
+
+        return supplierRepository.findAll()
+                .stream()
+                .map(SupplierResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public SupplierResponse findByIdResponse(Integer id){
+
+        return SupplierResponse.of(findById(id));
     }
 }
