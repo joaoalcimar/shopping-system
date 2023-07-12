@@ -1,0 +1,56 @@
+package br.com.productapi.services;
+
+
+import br.com.productapi.configs.SecretsConfig;
+import br.com.productapi.exceptions.AuthenticationException;
+import br.com.productapi.models.dtos.responses.JwtResponse;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+
+@Service
+public class JwtService {
+
+    @Autowired
+    private SecretsConfig secretsConfig;
+
+    private final static String BLANK_SPACE = " ";
+    private final static Integer TOKEN_INDEX = 1;
+
+    public void validateAuthorization(String token) {
+        String accessToken = extractToken(token);
+        String apiSecret = secretsConfig.getApiSecret();
+
+        try {
+            var claims = Jwts
+                    .parserBuilder()
+                    .setSigningKey(apiSecret.getBytes())
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+            JwtResponse user = JwtResponse.getUser(claims);
+            if (isEmpty(user) || isEmpty(user.getId())) {
+                throw new AuthenticationException("The user is not valid.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new AuthenticationException("Error while trying to proccess the Access Token.");
+        }
+    }
+
+    private String extractToken(String token) {
+        if (isEmpty(token)) {
+            throw new AuthenticationException("The access token was not informed.");
+        }
+
+        if (token.contains(BLANK_SPACE)) {
+            return token.split(BLANK_SPACE)[TOKEN_INDEX];
+        }
+
+        return token;
+    }
+}
