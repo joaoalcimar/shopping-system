@@ -1,5 +1,6 @@
 package br.com.productapi.exceptions.settings;
 
+import br.com.productapi.exceptions.AuthenticationException;
 import br.com.productapi.exceptions.EmptyStringException;
 import br.com.productapi.exceptions.NotFoundException;
 import br.com.productapi.exceptions.ValidationException;
@@ -32,12 +33,22 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleValidationException(NotFoundException notFoundException){
+    public ResponseEntity<?> handleNotFoundException(NotFoundException notFoundException){
 
         ExceptionDetails details = new ExceptionDetails();
         details.setStatus(HttpStatus.NOT_FOUND.value());
         details.setMessage(notFoundException.getMessage());
 
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException authenticationException){
+
+        ExceptionDetails details = new ExceptionDetails();
+        details.setStatus(HttpStatus.UNAUTHORIZED.value());
+        details.setMessage(authenticationException.getMessage());
+
+        return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
 }
