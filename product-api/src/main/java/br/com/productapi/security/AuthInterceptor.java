@@ -1,4 +1,4 @@
-package br.com.productapi.configs;
+package br.com.productapi.security;
 
 import br.com.productapi.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
