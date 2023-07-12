@@ -2,6 +2,7 @@ package br.com.productapi.controllers;
 
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
+import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,11 @@ public class ProductController {
     @GetMapping("{id}")
     public ProductResponse findById(@PathVariable Integer id){
         return productService.findByIdResponse(id);
+    }
+
+    @DeleteMapping("{id}")
+    public SuccessResponse deleteById(@PathVariable Integer id){
+        return productService.deleteProduct(id);
     }
 
     @GetMapping("name/{name}")

@@ -4,7 +4,7 @@ import br.com.productapi.exceptions.EmptyStringException;
 import br.com.productapi.exceptions.ValidationException;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
-import br.com.productapi.models.dtos.responses.SupplierResponse;
+import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.models.entities.Product;
 import br.com.productapi.models.entities.Supplier;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
-
 
 @Service
 public class ProductService {
@@ -47,28 +46,34 @@ public class ProductService {
 
     private void validateAvailability(ProductRequest request){
         if(isEmpty(request.getAvailableQuantity())){
-            throw new EmptyStringException("The product available quantity was not informed");
+            throw new EmptyStringException("The product available quantity must to be informed.");
         }
         if(request.getAvailableQuantity() < ZERO){
-            throw new EmptyStringException("The product available quantity should not be lesser than zero");
+            throw new EmptyStringException("The product available quantity should not be lesser than zero.");
         }
     }
 
     private void validateName(String name){
         if(isEmpty(name)){
-            throw new EmptyStringException("The product name was not informed");
+            throw new EmptyStringException("The product name must to be informed.");
         }
     }
 
     private void validateCategoryId(Integer categoryId){
         if(isEmpty(categoryId)){
-            throw new EmptyStringException("The category id was not informed");
+            throw new EmptyStringException("The category id must to be informed.");
         }
     }
 
     private void validateSupplierId(Integer supplierId){
         if(isEmpty(supplierId)){
-            throw new EmptyStringException("The supplier id was not informed");
+            throw new EmptyStringException("The supplier id must to be informed.");
+        }
+    }
+
+    private void validateId(Integer productId){
+        if(isEmpty(productId)){
+            throw new ValidationException("The product id must to be informed.");
         }
     }
 
@@ -93,9 +98,30 @@ public class ProductService {
     }
 
     public Product findById(Integer id){
+        validateId(id);
+
         return productRepository
                 .findById(id)
                 .orElseThrow(() -> new ValidationException("There is no product for the given id."));
+    }
+
+    public Boolean existsByCategoryId(Integer categoryId){
+        return productRepository.existsByCategoryId(categoryId);
+    }
+
+    public Boolean existsBySupplierId(Integer supplierId){
+        return productRepository.existsBySupplierId(supplierId);
+    }
+
+    public SuccessResponse deleteProduct(Integer id){
+        validateId(id);
+
+        try {
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ValidationException("There is no product for the given id.");
+        }
+        return SuccessResponse.create("Product successfully deleted.");
     }
 
 }

@@ -4,6 +4,7 @@ import br.com.productapi.exceptions.EmptyStringException;
 import br.com.productapi.exceptions.ValidationException;
 import br.com.productapi.models.dtos.requests.CategoryRequest;
 import br.com.productapi.models.dtos.responses.CategoryResponse;
+import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ProductService productService;
+
     public CategoryResponse save(CategoryRequest request){
         validateCategoryDescription(request.getDescription());
 
@@ -33,7 +37,14 @@ public class CategoryService {
         }
     }
 
+    private void validateId(Integer id){
+        if(isEmpty(id)){
+            throw new ValidationException("The category id must to be informed.");
+        }
+    }
+
     public Category findById(Integer id){
+        validateId(id);
 
         return categoryRepository
                 .findById(id)
@@ -60,6 +71,16 @@ public class CategoryService {
     public CategoryResponse findByIdResponse(Integer id){
 
         return CategoryResponse.of(findById(id));
+    }
+
+    public SuccessResponse deleteCategory(Integer id){
+        validateId(id);
+        if(productService.existsByCategoryId(id)){
+            throw new ValidationException("You cannot delete this category because it's already attached to a product.");
+        }
+
+        categoryRepository.deleteById(id);
+        return SuccessResponse.create("Category successfully deleted.");
     }
 
 }
