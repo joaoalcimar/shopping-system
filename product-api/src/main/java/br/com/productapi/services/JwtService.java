@@ -5,8 +5,6 @@ import br.com.productapi.configs.SecretsConfig;
 import br.com.productapi.exceptions.AuthenticationException;
 import br.com.productapi.models.dtos.responses.JwtResponse;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static org.springframework.util.ObjectUtils.isEmpty;
