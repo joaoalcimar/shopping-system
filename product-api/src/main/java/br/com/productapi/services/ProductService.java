@@ -1,6 +1,7 @@
 package br.com.productapi.services;
 
 import br.com.productapi.exceptions.EmptyStringException;
+import br.com.productapi.exceptions.NotFoundException;
 import br.com.productapi.exceptions.ValidationException;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
@@ -59,6 +60,12 @@ public class ProductService {
         }
     }
 
+    private void validateIdExistence(Integer id){
+        if(!productRepository.existsById(id)){
+            throw new NotFoundException("There is no product for the given id.");
+        }
+    }
+
     private void validateCategoryId(Integer categoryId){
         if(isEmpty(categoryId)){
             throw new EmptyStringException("The category id must to be informed.");
@@ -71,7 +78,7 @@ public class ProductService {
         }
     }
 
-    private void validateId(Integer productId){
+    private void validateIdFormat(Integer productId){
         if(isEmpty(productId)){
             throw new ValidationException("The product id must to be informed.");
         }
@@ -98,7 +105,7 @@ public class ProductService {
     }
 
     public Product findById(Integer id){
-        validateId(id);
+        validateIdFormat(id);
 
         return productRepository
                 .findById(id)
@@ -114,14 +121,29 @@ public class ProductService {
     }
 
     public SuccessResponse deleteProduct(Integer id){
-        validateId(id);
+        validateIdFormat(id);
+        validateIdExistence(id);
 
-        try {
-            productRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new ValidationException("There is no product for the given id.");
-        }
+        productRepository.deleteById(id);
+
         return SuccessResponse.create("Product successfully deleted.");
     }
 
+    public ProductResponse updateById(ProductRequest request, Integer id) {
+        validateIdFormat(id);
+        validateIdExistence(id);
+        validateName(request.getName());
+        validateAvailability(request);
+        validateCategoryId(request.getCategoryId());
+        validateSupplierId(request.getSupplierId());
+
+        Category category = categoryService.findById(request.getCategoryId());
+        Supplier supplier = supplierService.findById(request.getSupplierId());
+        Product product = Product.of(request, category, supplier);
+        product.setId(id);
+
+        productRepository.save(product);
+
+        return ProductResponse.of(product);
+    }
 }

@@ -36,6 +36,11 @@ public class CategoryController {
         return categoryService.deleteCategory(id);
     }
 
+    @PutMapping("{id}")
+    public CategoryResponse updateById(@RequestBody CategoryRequest request, @PathVariable Integer id){
+        return categoryService.updateById(request, id);
+    }
+
     @GetMapping("description/{description}")
     public List<CategoryResponse> findByDescription(@PathVariable String description){
         return categoryService.findByDescription(description);

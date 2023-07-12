@@ -36,6 +36,11 @@ public class SupplierController {
         return supplierService.deleteSupplier(id);
     }
 
+    @PutMapping("{id}")
+    public SupplierResponse updateById(@RequestBody SupplierRequest request, @PathVariable Integer id){
+        return supplierService.updateById(request, id);
+    }
+
     @GetMapping("name/{name}")
     public List<SupplierResponse> findByDescription(@PathVariable String name){
         return supplierService.findByName(name);

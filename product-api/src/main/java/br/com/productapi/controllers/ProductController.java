@@ -36,6 +36,11 @@ public class ProductController {
         return productService.deleteProduct(id);
     }
 
+    @PutMapping("{id}")
+    public ProductResponse updateById(@RequestBody ProductRequest request, @PathVariable Integer id){
+        return productService.updateById(request, id);
+    }
+
     @GetMapping("name/{name}")
     public List<ProductResponse> findByDescription(@PathVariable String name){
         return productService.findByName(name);
