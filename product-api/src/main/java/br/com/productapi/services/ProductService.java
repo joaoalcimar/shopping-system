@@ -3,6 +3,7 @@ package br.com.productapi.services;
 import br.com.productapi.exceptions.EmptyStringException;
 import br.com.productapi.exceptions.NotFoundException;
 import br.com.productapi.exceptions.ValidationException;
+import br.com.productapi.models.dtos.ProductStockDTO;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
 import br.com.productapi.models.dtos.responses.SuccessResponse;
@@ -145,5 +146,9 @@ public class ProductService {
         productRepository.save(product);
 
         return ProductResponse.of(product);
+    }
+
+    public void updateProductStock(ProductStockDTO productStockDTO){
+
     }
 }
