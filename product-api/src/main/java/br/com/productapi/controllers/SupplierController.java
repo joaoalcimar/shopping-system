@@ -28,7 +28,6 @@ public class SupplierController {
     @GetMapping("{id}")
     public SupplierResponse findById(@PathVariable Integer id){
         return supplierService.findByIdResponse(id);
-
     }
 
     @GetMapping("name/{name}")

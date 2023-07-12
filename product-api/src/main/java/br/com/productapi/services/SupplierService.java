@@ -28,14 +28,12 @@ public class SupplierService {
     }
 
     private void validateSupplierName(String name){
-
         if(isEmpty(name)){
             throw new EmptyStringException("The supplier name was not informed.");
         }
     }
 
     public Supplier findById(Integer id){
-
         return supplierRepository
                 .findById(id)
                 .orElseThrow(() -> new ValidationException("There is no supplier for the given id."));
@@ -51,7 +49,6 @@ public class SupplierService {
     }
 
     public List<SupplierResponse> findByAll(){
-
         return supplierRepository.findAll()
                 .stream()
                 .map(SupplierResponse::of)
@@ -59,7 +56,6 @@ public class SupplierService {
     }
 
     public SupplierResponse findByIdResponse(Integer id){
-
         return SupplierResponse.of(findById(id));
     }
 }
