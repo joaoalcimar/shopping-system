@@ -3,6 +3,7 @@ package br.com.productapi.services;
 import br.com.productapi.exceptions.EmptyStringException;
 import br.com.productapi.exceptions.NotFoundException;
 import br.com.productapi.exceptions.ValidationException;
+import br.com.productapi.models.dtos.ProductQuantityDTO;
 import br.com.productapi.models.dtos.ProductStockDTO;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
@@ -11,10 +12,15 @@ import br.com.productapi.models.entities.Category;
 import br.com.productapi.models.entities.Product;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.ProductRepository;
+import br.com.productapi.sales.dtos.SalesConfirmationDTO;
+import br.com.productapi.sales.enums.SalesStatus;
+import br.com.productapi.sales.rabbitmq.SalesConfirmationSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +40,9 @@ public class ProductService {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private SalesConfirmationSender messageSender;
 
     public ProductResponse save(ProductRequest request){
         validateName(request.getName());
@@ -153,8 +162,45 @@ public class ProductService {
     public void updateProductStock(ProductStockDTO productStock){
         try{
             validateUpdateStockData(productStock);
+            updateStock(productStock);
+
         }catch (Exception e){
-            log.error("Error while trying to update stock for message.");
+            log.error("Error while trying to update stock for message with error: {}", e.getMessage(), e);
+            SalesConfirmationDTO rejectedMessage = new SalesConfirmationDTO(productStock.getSalesId(), SalesStatus.REJECTED);
+            messageSender.sendSalesConfirmationMessage(rejectedMessage);
+        }
+    }
+
+    @Transactional
+    public void updateStock(ProductStockDTO productStock){
+        List<Product> productsToUpdate = new ArrayList<>();
+
+        productStock
+                .getProducts()
+                .forEach(salesProduct -> {
+
+                    Product existingProduct = findById(salesProduct.getProductId());
+                    validateQuantityInStock(salesProduct, existingProduct);
+                    existingProduct.updateStock(salesProduct.getQuantity());
+
+                    productsToUpdate.add(existingProduct);
+                });
+
+        if(!isEmpty(productsToUpdate)){
+            productRepository.saveAll(productsToUpdate);
+
+            String transactionId = productStock.getSalesId();
+            SalesConfirmationDTO message = new SalesConfirmationDTO(transactionId, SalesStatus.APPROVED);
+            messageSender.sendSalesConfirmationMessage(message);
+        }
+
+    }
+
+    private void validateQuantityInStock(ProductQuantityDTO salesProduct, Product existingProduct){
+        if(salesProduct.getQuantity() > existingProduct.getAvailableQuantity()){
+            throw new ValidationException(
+                    String.format("The product %s is out of stock", existingProduct.getId())
+            );
         }
     }
 

@@ -56,7 +56,7 @@ public class MessagingConfig {
     @Bean
     public Binding salesConfirmationMqBinding(TopicExchange topicExchange){
         return BindingBuilder
-                .bind(productStockMq())
+                .bind(salesConfirmationMq())
                 .to(topicExchange)
                 .with(salesConfirmationKey);
     }
