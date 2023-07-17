@@ -11,6 +11,7 @@ import br.com.productapi.models.entities.Category;
 import br.com.productapi.models.entities.Product;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+@Slf4j
 @Service
 public class ProductService {
 
@@ -148,7 +150,29 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public void updateProductStock(ProductStockDTO productStockDTO){
+    public void updateProductStock(ProductStockDTO productStock){
+        try{
+            validateUpdateStockData(productStock);
+        }catch (Exception e){
+            log.error("Error while trying to update stock for message.");
+        }
+    }
 
+    private void validateUpdateStockData(ProductStockDTO product){
+        if(isEmpty(product) || isEmpty(product.getSalesId())){
+            throw new ValidationException("The product data or sales id must be informed.");
+        }
+        if(isEmpty(product.getProducts())){
+            throw new ValidationException("The sales products must be informed.");
+        }
+
+        product
+                .getProducts()
+                .forEach(salesProducts -> {
+                    if(isEmpty(salesProducts.getQuantity())
+                        || isEmpty(salesProducts.getProductId())){
+                        throw new ValidationException("The productId and the quantity must be informed.");
+                    }
+                });
     }
 }
