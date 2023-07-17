@@ -5,14 +5,18 @@ import br.com.productapi.exceptions.NotFoundException;
 import br.com.productapi.exceptions.ValidationException;
 import br.com.productapi.models.dtos.ProductQuantityDTO;
 import br.com.productapi.models.dtos.ProductStockDTO;
+import br.com.productapi.models.dtos.requests.ProductCheckStockRequest;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
+import br.com.productapi.models.dtos.responses.SalesResponse;
 import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.models.entities.Product;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.ProductRepository;
+import br.com.productapi.sales.client.SalesClient;
 import br.com.productapi.sales.dtos.SalesConfirmationDTO;
+import br.com.productapi.sales.dtos.responses.SalesProductResponse;
 import br.com.productapi.sales.enums.SalesStatus;
 import br.com.productapi.sales.rabbitmq.SalesConfirmationSender;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +47,9 @@ public class ProductService {
 
     @Autowired
     private SalesConfirmationSender messageSender;
+
+    @Autowired
+    private SalesClient salesClient;
 
     public ProductResponse save(ProductRequest request){
         validateName(request.getName());
@@ -121,7 +128,7 @@ public class ProductService {
 
         return productRepository
                 .findById(id)
-                .orElseThrow(() -> new ValidationException("There is no product for the given id."));
+                .orElseThrow(() -> new NotFoundException("There is no product for the given id."));
     }
 
     public Boolean existsByCategoryId(Integer categoryId){
@@ -220,5 +227,43 @@ public class ProductService {
                         throw new ValidationException("The productId and the quantity must be informed.");
                     }
                 });
+    }
+
+    public SalesResponse findSalesById(Integer id){
+        Product product = findById(id);
+
+        try{
+            SalesProductResponse sales = salesClient.findSalesByProductId(id)
+                    .orElseThrow(() -> new NotFoundException("The sales associated to this product was not found."));
+            return SalesResponse.of(product, sales.getSalesIds());
+        }catch (Exception e){
+            throw new ValidationException("There is an error trying to get the product sales.");
+        }
+    }
+
+    public SuccessResponse checkProductsStock(ProductCheckStockRequest request){
+        if(isEmpty(request) || isEmpty(request.getProducts())){
+            throw new ValidationException("The request data and products must be informed");
+        }
+
+        request
+                .getProducts()
+                .forEach(this::validateStock);
+
+        return SuccessResponse.create("Stock is fine.");
+    }
+
+    private void validateStock(ProductQuantityDTO productQuantity){
+        if(isEmpty(productQuantity.getProductId()) || isEmpty(productQuantity.getQuantity())){
+            throw new ValidationException("Product id and quantity must be informed.");
+        }
+
+        Product product = findById(productQuantity.getProductId());
+
+        if (productQuantity.getQuantity() > product.getAvailableQuantity()){
+            throw new ValidationException(String.format("The product %s is out of stock.", product.getId()));
+        }
+
+
     }
 }
