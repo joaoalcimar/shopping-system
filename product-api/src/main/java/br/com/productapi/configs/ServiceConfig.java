@@ -7,10 +7,9 @@ import org.springframework.context.annotation.PropertySource;
 
 @Data
 @Configuration
-@PropertySource("classpath:secrets.properties")
-public class SecretsConfig {
+@PropertySource("classpath:services.properties")
+public class ServiceConfig {
 
-    @Value("${app-config.secrets.api-secret}")
-    private String apiSecret;
-
+    @Value("${app-config.services.sales}")
+    private String salesApiHost;
 }
