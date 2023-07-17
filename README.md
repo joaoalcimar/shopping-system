@@ -31,33 +31,23 @@ Make sure you have the following software installed on your system:
 - Java Development Kit (JDK)
 - Node.js and NPM (Node Package Manager)
 - Docker
+- Yarn
 
 ### **Installation**
 1. Clone the repository:   
     - git clone https://github.com/joaoalcimar/shopping-system.git
 
   
-2. Backend Setup:
-    - Open the backend directory.
+2. Product-api:
+    - Open the product-api directory.
     - Configure the database connection settings in the application.properties file.
     - Build and run the Spring Boot application.
 
 
-3. Frontend Setup:
-    - Open the frontend directory.
-    - Install the required dependencies by running the following command:
-    - Configure the backend API endpoint in the .env file.
-    - Start the frontend application:
-    - npm start
-
-  
-4. Microservices Setup:
-    - Open the microservices directory.
-    - Each microservice is contained in a separate directory. Navigate to each microservice directory and follow the respective instructions in their README files.
-
-
-5. Deployment:
-    - Deploy the application to AWS using the provided deployment scripts or by following the AWS documentation.
+3. Auth-api:
+    - Open the auth-api directory in CMD.
+    - Run the command "yarn startDev"
+      
   
 ### **Local Running**
 
