@@ -1,7 +1,9 @@
 package br.com.productapi.controllers;
 
+import br.com.productapi.models.dtos.requests.ProductCheckStockRequest;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
+import br.com.productapi.models.dtos.responses.SalesResponse;
 import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +47,15 @@ public class ProductController {
     public List<ProductResponse> findByDescription(@PathVariable String name){
         return productService.findByName(name);
     }
+
+    @GetMapping("{id}/sales")
+    public SalesResponse findProductSales(@PathVariable Integer id){
+        return productService.findSalesById(id);
+    }
+
+    @PostMapping("check-stock")
+    public SuccessResponse checkProductStock(@RequestBody ProductCheckStockRequest request){
+        return productService.checkProductsStock(request);
+    }
+
 }

@@ -3,21 +3,34 @@ package br.com.productapi.services;
 import br.com.productapi.exceptions.EmptyStringException;
 import br.com.productapi.exceptions.NotFoundException;
 import br.com.productapi.exceptions.ValidationException;
+import br.com.productapi.models.dtos.ProductQuantityDTO;
+import br.com.productapi.models.dtos.ProductStockDTO;
+import br.com.productapi.models.dtos.requests.ProductCheckStockRequest;
 import br.com.productapi.models.dtos.requests.ProductRequest;
 import br.com.productapi.models.dtos.responses.ProductResponse;
+import br.com.productapi.models.dtos.responses.SalesResponse;
 import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.models.entities.Product;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.ProductRepository;
+import br.com.productapi.sales.client.SalesClient;
+import br.com.productapi.sales.dtos.SalesConfirmationDTO;
+import br.com.productapi.sales.dtos.responses.SalesProductResponse;
+import br.com.productapi.sales.enums.SalesStatus;
+import br.com.productapi.sales.rabbitmq.SalesConfirmationSender;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+@Slf4j
 @Service
 public class ProductService {
 
@@ -31,6 +44,12 @@ public class ProductService {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private SalesConfirmationSender messageSender;
+
+    @Autowired
+    private SalesClient salesClient;
 
     public ProductResponse save(ProductRequest request){
         validateName(request.getName());
@@ -109,7 +128,7 @@ public class ProductService {
 
         return productRepository
                 .findById(id)
-                .orElseThrow(() -> new ValidationException("There is no product for the given id."));
+                .orElseThrow(() -> new NotFoundException("There is no product for the given id."));
     }
 
     public Boolean existsByCategoryId(Integer categoryId){
@@ -145,5 +164,106 @@ public class ProductService {
         productRepository.save(product);
 
         return ProductResponse.of(product);
+    }
+
+    public void updateProductStock(ProductStockDTO productStock){
+        try{
+            validateUpdateStockData(productStock);
+            updateStock(productStock);
+
+        }catch (Exception e){
+            log.error("Error while trying to update stock for message with error: {}", e.getMessage(), e);
+            SalesConfirmationDTO rejectedMessage = new SalesConfirmationDTO(productStock.getSalesId(), SalesStatus.REJECTED);
+            messageSender.sendSalesConfirmationMessage(rejectedMessage);
+        }
+    }
+
+    @Transactional
+    public void updateStock(ProductStockDTO productStock){
+        List<Product> productsToUpdate = new ArrayList<>();
+
+        productStock
+                .getProducts()
+                .forEach(salesProduct -> {
+
+                    Product existingProduct = findById(salesProduct.getProductId());
+                    validateQuantityInStock(salesProduct, existingProduct);
+                    existingProduct.updateStock(salesProduct.getQuantity());
+
+                    productsToUpdate.add(existingProduct);
+                });
+
+        if(!isEmpty(productsToUpdate)){
+            productRepository.saveAll(productsToUpdate);
+
+            String transactionId = productStock.getSalesId();
+            SalesConfirmationDTO message = new SalesConfirmationDTO(transactionId, SalesStatus.APPROVED);
+            messageSender.sendSalesConfirmationMessage(message);
+        }
+
+    }
+
+    private void validateQuantityInStock(ProductQuantityDTO salesProduct, Product existingProduct){
+        if(salesProduct.getQuantity() > existingProduct.getAvailableQuantity()){
+            throw new ValidationException(
+                    String.format("The product %s is out of stock", existingProduct.getId())
+            );
+        }
+    }
+
+    private void validateUpdateStockData(ProductStockDTO product){
+        if(isEmpty(product) || isEmpty(product.getSalesId())){
+            throw new ValidationException("The product data or sales id must be informed.");
+        }
+        if(isEmpty(product.getProducts())){
+            throw new ValidationException("The sales products must be informed.");
+        }
+
+        product
+                .getProducts()
+                .forEach(salesProducts -> {
+                    if(isEmpty(salesProducts.getQuantity())
+                        || isEmpty(salesProducts.getProductId())){
+                        throw new ValidationException("The productId and the quantity must be informed.");
+                    }
+                });
+    }
+
+    public SalesResponse findSalesById(Integer id){
+        Product product = findById(id);
+
+        try{
+            SalesProductResponse sales = salesClient.findSalesByProductId(id)
+                    .orElseThrow(() -> new NotFoundException("The sales associated to this product was not found."));
+            return SalesResponse.of(product, sales.getSalesIds());
+        }catch (Exception e){
+            throw new ValidationException("There is an error trying to get the product sales.");
+        }
+    }
+
+    public SuccessResponse checkProductsStock(ProductCheckStockRequest request){
+        if(isEmpty(request) || isEmpty(request.getProducts())){
+            throw new ValidationException("The request data and products must be informed");
+        }
+
+        request
+                .getProducts()
+                .forEach(this::validateStock);
+
+        return SuccessResponse.create("Stock is fine.");
+    }
+
+    private void validateStock(ProductQuantityDTO productQuantity){
+        if(isEmpty(productQuantity.getProductId()) || isEmpty(productQuantity.getQuantity())){
+            throw new ValidationException("Product id and quantity must be informed.");
+        }
+
+        Product product = findById(productQuantity.getProductId());
+
+        if (productQuantity.getQuantity() > product.getAvailableQuantity()){
+            throw new ValidationException(String.format("The product %s is out of stock.", product.getId()));
+        }
+
+
     }
 }
