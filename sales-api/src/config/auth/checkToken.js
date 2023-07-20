@@ -1,6 +1,6 @@
 import { UNAUTHORIZED, INTERNAL_SERVER_ERROR} from "../constants/httpStatus.js";
 import AuthException from "./AuthException.js";
-import * as secrets from "../secrets/secrets.js";
+import * as secrets from "../constants/secrets.js";
 import jwt from "jsonwebtoken";
 import {promisify} from "util";
 
