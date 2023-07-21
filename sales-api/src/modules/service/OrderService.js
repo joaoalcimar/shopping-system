@@ -3,8 +3,7 @@ import {sendMessageToProductStockUpdateQueue} from "../product/rabbitmq/productS
 import * as httpStatus from "../../config/constants/httpStatus.js";
 import {APPROVED, PENDING, REJECTED} from "../status/OrderStatus.js";
 import OrderException from "../exception/OrderException.js";
-import orderRepository from "../repository/OrderRepository.js";
-import {BAD_REQUEST} from "../../config/constants/httpStatus.js";
+import {BAD_REQUEST, NOT_FOUND} from "../../config/constants/httpStatus.js";
 import ProductClient from "../product/client/ProductClient.js";
 
 class OrderService {
@@ -20,7 +19,7 @@ class OrderService {
 
             await this.validateProductStock(order, authorization);
 
-            let createdOrder = await orderRepository.save(order);
+            let createdOrder = await OrderRepository.save(order);
 
             this.sendMessage(createdOrder);
 
@@ -90,6 +89,36 @@ class OrderService {
         }
         sendMessageToProductStockUpdateQueue(message);
 
+    }
+
+    async findById(req){
+
+        try{
+            const {id} = req.params;
+            this.validateInformedId(id);
+            const existingOrder = await OrderRepository.findById(id);
+
+            if(!exisintgOrder){
+                throw new OrderException(NOT_FOUND, "The order was not found.");
+            }
+
+            return {
+                status: httpStatus.SUCCESS,
+                createdOrder
+            }
+
+        }catch (err) {
+            return{
+                status: err.status ? err.status : httpStatus.INTERNAL_SERVER_ERROR,
+                message: err.message
+            };
+        }
+    }
+
+    validateInformedId(id){
+        if(!id){
+            throw new OrderException(BAD_REQUEST, "The order id must be informed");
+        }
     }
 }
 

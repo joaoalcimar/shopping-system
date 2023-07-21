@@ -3,6 +3,7 @@ import { connectMongoDB } from './src/config/db/mongoDBConfig.js';
 import {createInitialData} from "./src/config/db/initialData.js";
 import checkToken from "./src/config/auth/checkToken.js";
 import {connectRabbitMQ} from "./src/config/rabbitmq/rabbitConfig.js";
+import orderRoute from "./src/modules/route/OrderRoute.js";
 
 const app = express();
 const env = process.env;
@@ -13,6 +14,7 @@ createInitialData();
 connectRabbitMQ();
 
 //app.use(checkToken);
+app.use(orderRoute);
 
 app.get('/api/status', (req, res) => {
     return res.status(200).json({
