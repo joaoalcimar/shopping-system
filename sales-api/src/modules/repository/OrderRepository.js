@@ -11,6 +11,15 @@ class OrderRepository {
         }
     }
 
+    async findAll(){
+        try{
+            return await Order.find();
+        } catch (error) {
+            console.error(error.message);
+            return null;
+        }
+    }
+
     async findById(id){
         try{
             return await Order.findById(id);
@@ -20,17 +29,14 @@ class OrderRepository {
         }
     }
 
-    async findAll(){
+    async findByProductId(productId){
         try{
-            return await Order.findAll();
+            return await Order.find({"products.productId" : Number(productId)});
         } catch (error) {
             console.error(error.message);
             return null;
         }
     }
-
-
-
 
 }
 

@@ -13,7 +13,8 @@ connectMongoDB();
 createInitialData();
 connectRabbitMQ();
 
-//app.use(checkToken);
+app.use(express.json());
+app.use(checkToken);
 app.use(orderRoute);
 
 app.get('/api/status', (req, res) => {

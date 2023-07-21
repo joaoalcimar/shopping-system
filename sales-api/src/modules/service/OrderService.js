@@ -9,7 +9,8 @@ import ProductClient from "../product/client/ProductClient.js";
 class OrderService {
     async createOrder(req) {
         try{
-            let {orderData} = req.body;
+            let orderData = req.body;
+
             const {authUser} = req;
             const {authorization} = req.headers;
 
@@ -38,7 +39,7 @@ class OrderService {
 
     createInitialOrderData(orderData, authUser){
         return {
-            products: orderData,
+            products: orderData.products,
             user: authUser,
             status: PENDING,
             createdAt: new Date(),
@@ -76,19 +77,41 @@ class OrderService {
     }
 
     async validateProductStock(order, token){
-        let stockIsOut = await ProductClient.checkProductStock(order, token);
-        if(stockIsOut){
+        let isProductStockAvailable = await ProductClient.checkProductStock(order, token);
+        if(isProductStockAvailable){
             throw new OrderException(BAD_REQUEST, 'The stock is out for the products.');
         }
     }
 
     sendMessage(createdOrder){
         const message = {
-            salesId: createdOrder.salesId,
+            salesId: createdOrder.id,
             products: createdOrder.products
         }
         sendMessageToProductStockUpdateQueue(message);
 
+    }
+
+    async findAll(){
+
+        try{
+            const allOrders = await OrderRepository.findAll();
+
+            if(!allOrders){
+                throw new OrderException(NOT_FOUND, "No orders were not found.");
+            }
+
+            return {
+                status: httpStatus.SUCCESS,
+                allOrders
+            }
+
+        }catch (err) {
+            return{
+                status: err.status ? err.status : httpStatus.INTERNAL_SERVER_ERROR,
+                message: err.message
+            };
+        }
     }
 
     async findById(req){
@@ -98,13 +121,39 @@ class OrderService {
             this.validateInformedId(id);
             const existingOrder = await OrderRepository.findById(id);
 
-            if(!exisintgOrder){
+            if(!existingOrder){
                 throw new OrderException(NOT_FOUND, "The order was not found.");
             }
 
             return {
                 status: httpStatus.SUCCESS,
-                createdOrder
+                existingOrder
+            }
+
+        }catch (err) {
+            return{
+                status: err.status ? err.status : httpStatus.INTERNAL_SERVER_ERROR,
+                message: err.message
+            };
+        }
+    }
+
+    async findByProductId(req){
+
+        try{
+            const {productId} = req.params;
+            this.validateInformedId(productId);
+            const orders = await OrderRepository.findByProductId(productId);
+
+            if(!orders){
+                throw new OrderException(NOT_FOUND, "The product was not found.");
+            }
+
+            return {
+                status: httpStatus.SUCCESS,
+                salesIds: orders.map((order) => {
+                    return order.id;
+                })
             }
 
         }catch (err) {
@@ -117,7 +166,7 @@ class OrderService {
 
     validateInformedId(id){
         if(!id){
-            throw new OrderException(BAD_REQUEST, "The order id must be informed");
+            throw new OrderException(BAD_REQUEST, "The id must be informed");
         }
     }
 }
