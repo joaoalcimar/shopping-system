@@ -24,7 +24,7 @@ export async function connectRabbitMQ(){
     async function setUpRabbitMQ() {
         amqp.connect(RABBIT_MQ_URL, (error, connection) => {
             if (error) {
-                console.error(error.getMessage())
+                console.error(error.message)
                 throw error;
             }
 
@@ -46,7 +46,7 @@ export async function connectRabbitMQ(){
     function createQueue(connection, queue, routingKey, topic){
         connection.createChannel((error, channel) => {
             if(error){
-                console.error(error.getMessage());
+                console.error(error.message);
                 throw error;
             }
             channel.assertExchange(topic, 'topic', {durable: true});
