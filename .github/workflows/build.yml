@@ -15,6 +15,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Verify directory
+        run: ls
+
       - name: Navigate to Product API
         run: cd product-api
 
