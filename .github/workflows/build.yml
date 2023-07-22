@@ -16,6 +16,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Navigate to Product API
+        run: cd product-api
+
+      - name: Verify directory
         run: ls
 
       - name: Build with Maven
