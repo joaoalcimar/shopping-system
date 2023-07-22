@@ -16,7 +16,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '20'
+          java-version: 'corretto-11'
+          distribution: 'amazon'
 
       - name: Build with Maven
         run: mvn package
