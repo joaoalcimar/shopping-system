@@ -16,7 +16,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Navigate to Product API
-        run: cd product-api
+        run: ls
 
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
