@@ -36,7 +36,7 @@ public class JwtService {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new AuthenticationException("Error while trying to proccess the Access Token.");
+            throw new AuthenticationException("Error while trying to process the Access Token.");
         }
     }
 
