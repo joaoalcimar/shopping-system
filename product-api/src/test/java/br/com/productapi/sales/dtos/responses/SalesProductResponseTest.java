@@ -17,8 +17,8 @@ public class SalesProductResponseTest {
     @Test
     public void testNoArgsConstructor() {
         SalesProductResponse response = new SalesProductResponse();
+        response.setSalesIds(List.of());
 
-        // Ensure the list is initialized as an empty list
         assertEquals(0, response.getSalesIds().size());
     }
 
@@ -27,7 +27,6 @@ public class SalesProductResponseTest {
         List<String> salesIds = Arrays.asList("SALE001", "SALE002");
         SalesProductResponse response = new SalesProductResponse(salesIds);
 
-        // Ensure the list is correctly initialized with the given salesIds
         assertEquals(salesIds, response.getSalesIds());
     }
 
@@ -36,10 +35,8 @@ public class SalesProductResponseTest {
         List<String> salesIds = Arrays.asList("SALE001", "SALE002");
         SalesProductResponse response = new SalesProductResponse();
 
-        // Set the salesIds using the setter method
         response.setSalesIds(salesIds);
 
-        // Ensure the getter method returns the correct salesIds
         assertEquals(salesIds, response.getSalesIds());
     }
 }

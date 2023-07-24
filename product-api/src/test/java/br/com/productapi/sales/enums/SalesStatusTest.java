@@ -36,10 +36,4 @@ public class SalesStatusTest {
         assertEquals("APPROVED", SalesStatus.APPROVED.toString());
         assertEquals("REJECTED", SalesStatus.REJECTED.toString());
     }
-
-    @Test
-    public void testEnumHashCode() {
-        assertEquals(0, SalesStatus.APPROVED.hashCode());
-        assertEquals(1, SalesStatus.REJECTED.hashCode());
-    }
 }
