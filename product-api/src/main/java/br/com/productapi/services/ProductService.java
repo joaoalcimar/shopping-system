@@ -263,7 +263,5 @@ public class ProductService {
         if (productQuantity.getQuantity() > product.getAvailableQuantity()){
             throw new ValidationException(String.format("The product %s is out of stock.", product.getId()));
         }
-
-
     }
 }

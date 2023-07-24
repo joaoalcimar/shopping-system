@@ -26,6 +26,7 @@ import br.com.productapi.sales.enums.SalesStatusTest;
 import br.com.productapi.sales.rabbitmq.SalesConfirmationSenderTest;
 import br.com.productapi.services.CategoryServiceTest;
 import br.com.productapi.services.JwtServiceTest;
+import br.com.productapi.services.ProductServiceTest;
 import br.com.productapi.services.SupplierServiceTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +72,7 @@ import static org.junit.Assert.assertTrue;
         // services dir
         CategoryServiceTest.class,
         JwtServiceTest.class,
+        ProductServiceTest.class,
         SupplierServiceTest.class
 })
 
