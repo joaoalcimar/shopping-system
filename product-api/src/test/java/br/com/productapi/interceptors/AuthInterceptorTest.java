@@ -2,8 +2,8 @@ package br.com.productapi.interceptors;
 
 import br.com.productapi.exceptions.AuthenticationException;
 import br.com.productapi.services.JwtService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -27,7 +27,7 @@ public class AuthInterceptorTest {
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         request = new MockHttpServletRequest();

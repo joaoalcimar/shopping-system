@@ -1,7 +1,7 @@
 package br.com.productapi.configs;
 
 import br.com.productapi.interceptors.AuthInterceptor;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 public class InterceptorConfigTest {
 
     @Test
-    public void authInterceptor_ShouldReturnInstanceOfAuthInterceptor() {
+    public void authInterceptorShouldReturnInstanceOfAuthInterceptor() {
         InterceptorConfig interceptorConfig = new InterceptorConfig();
 
         AuthInterceptor authInterceptor = interceptorConfig.authInterceptor();

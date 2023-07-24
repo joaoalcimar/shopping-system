@@ -1,56 +1,42 @@
 package br.com.productapi.interceptors;
 
+import static org.junit.Assert.*;
+
 import br.com.productapi.exceptions.ValidationException;
 import feign.RequestTemplate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.context.request.RequestAttributes;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-@ActiveProfiles("test")
 public class FeignClientAuthInterceptorTest {
 
-    @Mock
-    private HttpServletRequest request;
-
-    @Mock
-    private RequestTemplate template;
-
-    @InjectMocks
     private FeignClientAuthInterceptor interceptor;
+    private RequestTemplate requestTemplate;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @Before
+    public void setup() {
+        interceptor = new FeignClientAuthInterceptor();
+        requestTemplate = new RequestTemplate();
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addHeader("Authorization", "Bearer my-access-token");
 
-        RequestAttributes attributes = new ServletRequestAttributes(request);
-        RequestContextHolder.setRequestAttributes(attributes);
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(mockRequest);
+        RequestContextHolder.setRequestAttributes(requestAttributes);
     }
 
     @Test
     public void testApply() {
-        String authorizationValue = "Bearer abc123";
-        when(request.getHeader("Authorization")).thenReturn(authorizationValue);
-
-        interceptor.apply(template);
-
-        verify(template, times(1)).header("Authorization", authorizationValue);
+        interceptor.apply(requestTemplate);
+        String authorizationHeader = requestTemplate.headers().get("Authorization").iterator().next();
+        assertEquals("Bearer my-access-token", authorizationHeader);
     }
 
-    @Test
-    public void testApplyThrowsValidationExceptionWhenNoRequestContext() {
-        RequestContextHolder.resetRequestAttributes();
+    @Test(expected = ValidationException.class)
+    public void testApplyWhenNoCurrentRequest() {
+        RequestContextHolder.setRequestAttributes(null);
 
-        assertThrows(ValidationException.class, () -> interceptor.apply(template));
+        interceptor.apply(requestTemplate);
     }
 }

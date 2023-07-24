@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.productapi.exceptions.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import br.com.productapi.exceptions.EmptyStringException;
@@ -26,17 +24,15 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class CategoryServiceTest {
 
-    @Mock
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository = mock(CategoryRepository.class);
 
-    @Mock
-    private ProductService productService;
+    private final ProductService productService = mock(ProductService.class);
 
-    @InjectMocks
     private CategoryService categoryService;
 
-    @BeforeEach
+    @Before
     public void setup() {
+        categoryService = new CategoryService(categoryRepository, productService);
         MockitoAnnotations.openMocks(this);
     }
 
@@ -212,7 +208,7 @@ public class CategoryServiceTest {
         int categoryId = 1;
 
         CategoryRequest request = new CategoryRequest();
-        request.setDescription(""); // Empty description
+        request.setDescription("");
 
         assertThrows(NotFoundException.class, () -> categoryService.updateById(request, categoryId));
     }

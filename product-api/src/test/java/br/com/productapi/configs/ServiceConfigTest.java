@@ -1,28 +1,30 @@
 package br.com.productapi.configs;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-@SpringBootTest
+
 @ActiveProfiles("test")
 public class ServiceConfigTest {
 
-    @Autowired
     private ServiceConfig serviceConfig;
 
-    @Autowired
-    private Environment environment;
+    @Before
+    public void setUp(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ServiceConfig.class);
+
+        serviceConfig = context.getBean(ServiceConfig.class);
+    }
 
     @Test
     public void testSalesApiHost() {
         assertNotNull(serviceConfig);
-        String expectedSalesApiHost = environment.getProperty("app-config.services.sales");
-        assertEquals(expectedSalesApiHost, serviceConfig.getSalesApiHost());
+        String expectedAPIHost = "https://localhost:8082";
+        assertEquals(expectedAPIHost, serviceConfig.getSalesApiHost());
     }
 }

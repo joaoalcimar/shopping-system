@@ -3,8 +3,8 @@ package br.com.productapi.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import br.com.productapi.configs.SecretsConfig;
 import br.com.productapi.exceptions.AuthenticationException;
@@ -17,7 +17,7 @@ public class JwtServiceTest {
 
     private SecretsConfig secretsConfig;
 
-    @BeforeEach
+    @Before
     public void setup() {
         secretsConfig = mock(SecretsConfig.class);
         jwtService = new JwtService(secretsConfig);

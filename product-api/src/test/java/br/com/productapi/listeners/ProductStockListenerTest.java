@@ -4,8 +4,8 @@ import br.com.productapi.models.dtos.ProductStockDTO;
 import br.com.productapi.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.*;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -26,7 +26,7 @@ public class ProductStockListenerTest {
     @Captor
     private ArgumentCaptor<ProductStockDTO> productStockDTOCaptor;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }

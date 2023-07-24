@@ -1,28 +1,23 @@
 package br.com.productapi.configs;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-@SpringBootTest
-@ActiveProfiles("test")
 public class SecretsConfigTest {
 
-    @Autowired
     private SecretsConfig secretsConfig;
 
-    @Autowired
-    private Environment environment;
+    @Before
+    public void setup() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SecretsConfig.class);
+        secretsConfig = context.getBean(SecretsConfig.class);
+    }
 
     @Test
     public void testApiSecret() {
-        assertNotNull(secretsConfig);
-        String expectedApiSecret = environment.getProperty("app-config.secrets.api-secret");
+        String expectedApiSecret = "c2VjcmV0LWFwaS0xMjM0NTYtcGFzc3dvcmQtZW5jb2Rlci02NC1AQEA=";
         assertEquals(expectedApiSecret, secretsConfig.getApiSecret());
     }
 }
