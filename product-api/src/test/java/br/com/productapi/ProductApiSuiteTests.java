@@ -5,6 +5,8 @@ import br.com.productapi.configs.MessagingConfigTest;
 import br.com.productapi.configs.SecretsConfigTest;
 import br.com.productapi.configs.ServiceConfigTest;
 import br.com.productapi.controllers.StatusControllerTest;
+import br.com.productapi.exceptions.settings.ExceptionDetailsTest;
+import br.com.productapi.exceptions.settings.GlobalExceptionHandlerTest;
 import br.com.productapi.interceptors.AuthInterceptorTest;
 import br.com.productapi.interceptors.FeignClientAuthInterceptorTest;
 import br.com.productapi.listeners.ProductStockListenerTest;
@@ -36,6 +38,9 @@ import static org.junit.Assert.assertTrue;
         ServiceConfigTest.class,
         // controllers dir
         StatusControllerTest.class,
+        // exceptions
+        ExceptionDetailsTest.class,
+        GlobalExceptionHandlerTest.class,
         // interceptors dir
         AuthInterceptorTest.class,
         FeignClientAuthInterceptorTest.class,
