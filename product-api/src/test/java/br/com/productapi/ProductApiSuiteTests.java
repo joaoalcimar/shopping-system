@@ -8,6 +8,16 @@ import br.com.productapi.controllers.StatusControllerTest;
 import br.com.productapi.interceptors.AuthInterceptorTest;
 import br.com.productapi.interceptors.FeignClientAuthInterceptorTest;
 import br.com.productapi.listeners.ProductStockListenerTest;
+import br.com.productapi.models.dtos.ProductQuantityDTOTest;
+import br.com.productapi.models.dtos.ProductStockDTOTest;
+import br.com.productapi.models.dtos.requests.CategoryRequestTest;
+import br.com.productapi.models.dtos.requests.ProductCheckStockRequestTest;
+import br.com.productapi.models.dtos.requests.ProductRequestTest;
+import br.com.productapi.models.dtos.requests.SupplierRequestTest;
+import br.com.productapi.models.dtos.responses.JwtResponseTest;
+import br.com.productapi.models.dtos.responses.ProductResponseTest;
+import br.com.productapi.models.dtos.responses.SalesResponseTest;
+import br.com.productapi.models.dtos.responses.SuccessResponseTest;
 import br.com.productapi.services.CategoryServiceTest;
 import br.com.productapi.services.JwtServiceTest;
 import br.com.productapi.services.SupplierServiceTest;
@@ -32,6 +42,18 @@ import static org.junit.Assert.assertTrue;
         // listeners dir
         ProductStockListenerTest.class,
         // models dir
+        CategoryRequestTest.class,
+        ProductCheckStockRequestTest.class,
+        ProductRequestTest.class,
+        SupplierRequestTest.class,
+        CategoryRequestTest.class,
+        JwtResponseTest.class,
+        ProductResponseTest.class,
+        SalesResponseTest.class,
+        SuccessResponseTest.class,
+        SupplierRequestTest.class,
+        ProductQuantityDTOTest.class,
+        ProductStockDTOTest.class,
         // sales dir
         // services dir
         CategoryServiceTest.class,
