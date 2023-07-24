@@ -20,6 +20,10 @@ import br.com.productapi.models.dtos.responses.JwtResponseTest;
 import br.com.productapi.models.dtos.responses.ProductResponseTest;
 import br.com.productapi.models.dtos.responses.SalesResponseTest;
 import br.com.productapi.models.dtos.responses.SuccessResponseTest;
+import br.com.productapi.sales.dtos.SalesConfirmationDTOTest;
+import br.com.productapi.sales.dtos.responses.SalesProductResponseTest;
+import br.com.productapi.sales.enums.SalesStatusTest;
+import br.com.productapi.sales.rabbitmq.SalesConfirmationSenderTest;
 import br.com.productapi.services.CategoryServiceTest;
 import br.com.productapi.services.JwtServiceTest;
 import br.com.productapi.services.SupplierServiceTest;
@@ -60,6 +64,10 @@ import static org.junit.Assert.assertTrue;
         ProductQuantityDTOTest.class,
         ProductStockDTOTest.class,
         // sales dir
+        SalesProductResponseTest.class,
+        SalesConfirmationDTOTest.class,
+        SalesStatusTest.class,
+        SalesConfirmationSenderTest.class,
         // services dir
         CategoryServiceTest.class,
         JwtServiceTest.class,
