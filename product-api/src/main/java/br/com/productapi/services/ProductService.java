@@ -64,7 +64,7 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    private void validateAvailability(ProductRequest request){
+    protected void validateAvailability(ProductRequest request){
         if(isEmpty(request.getAvailableQuantity())){
             throw new EmptyStringException("The product available quantity must to be informed.");
         }
@@ -73,31 +73,31 @@ public class ProductService {
         }
     }
 
-    private void validateName(String name){
+    protected void validateName(String name){
         if(isEmpty(name)){
             throw new EmptyStringException("The product name must to be informed.");
         }
     }
 
-    private void validateIdExistence(Integer id){
+    protected void validateIdExistence(Integer id){
         if(!productRepository.existsById(id)){
             throw new NotFoundException("There is no product for the given id.");
         }
     }
 
-    private void validateCategoryId(Integer categoryId){
+    protected void validateCategoryId(Integer categoryId){
         if(isEmpty(categoryId)){
             throw new EmptyStringException("The category id must to be informed.");
         }
     }
 
-    private void validateSupplierId(Integer supplierId){
+    protected void validateSupplierId(Integer supplierId){
         if(isEmpty(supplierId)){
             throw new EmptyStringException("The supplier id must to be informed.");
         }
     }
 
-    private void validateIdFormat(Integer productId){
+    protected void validateIdFormat(Integer productId){
         if(isEmpty(productId)){
             throw new ValidationException("The product id must to be informed.");
         }
@@ -203,7 +203,7 @@ public class ProductService {
 
     }
 
-    private void validateQuantityInStock(ProductQuantityDTO salesProduct, Product existingProduct){
+    protected void validateQuantityInStock(ProductQuantityDTO salesProduct, Product existingProduct){
         if(salesProduct.getQuantity() > existingProduct.getAvailableQuantity()){
             throw new ValidationException(
                     String.format("The product %s is out of stock", existingProduct.getId())
@@ -211,7 +211,7 @@ public class ProductService {
         }
     }
 
-    private void validateUpdateStockData(ProductStockDTO product){
+    protected void validateUpdateStockData(ProductStockDTO product){
         if(isEmpty(product) || isEmpty(product.getSalesId())){
             throw new ValidationException("The product data or sales id must be informed.");
         }
@@ -253,7 +253,7 @@ public class ProductService {
         return SuccessResponse.create("Stock is fine.");
     }
 
-    private void validateStock(ProductQuantityDTO productQuantity){
+    protected void validateStock(ProductQuantityDTO productQuantity){
         if(isEmpty(productQuantity.getProductId()) || isEmpty(productQuantity.getQuantity())){
             throw new ValidationException("Product id and quantity must be informed.");
         }
@@ -263,7 +263,5 @@ public class ProductService {
         if (productQuantity.getQuantity() > product.getAvailableQuantity()){
             throw new ValidationException(String.format("The product %s is out of stock.", product.getId()));
         }
-
-
     }
 }

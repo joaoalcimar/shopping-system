@@ -8,6 +8,8 @@ import br.com.productapi.models.dtos.responses.CategoryResponse;
 import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.repositories.CategoryRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class CategoryService {
 
     @Autowired
@@ -34,19 +38,19 @@ public class CategoryService {
         return CategoryResponse.of(category);
     }
 
-    private void validateIdExistence(Integer id){
+    protected void validateIdExistence(Integer id){
         if(!categoryRepository.existsById(id)){
             throw new NotFoundException("There is no category for the given id.");
         }
     }
 
-    private void validateCategoryDescription(String description){
+    protected void validateCategoryDescription(String description){
         if(isEmpty(description)){
             throw new EmptyStringException("The category description was not informed.");
         }
     }
 
-    private void validateIdFormat(Integer id){
+    protected void validateIdFormat(Integer id){
         if(isEmpty(id)){
             throw new ValidationException("The category id must to be informed.");
         }
