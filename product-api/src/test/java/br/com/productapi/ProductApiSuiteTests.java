@@ -16,10 +16,10 @@ import br.com.productapi.models.dtos.requests.CategoryRequestTest;
 import br.com.productapi.models.dtos.requests.ProductCheckStockRequestTest;
 import br.com.productapi.models.dtos.requests.ProductRequestTest;
 import br.com.productapi.models.dtos.requests.SupplierRequestTest;
-import br.com.productapi.models.dtos.responses.JwtResponseTest;
-import br.com.productapi.models.dtos.responses.ProductResponseTest;
-import br.com.productapi.models.dtos.responses.SalesResponseTest;
-import br.com.productapi.models.dtos.responses.SuccessResponseTest;
+import br.com.productapi.models.dtos.responses.*;
+import br.com.productapi.models.entities.CategoryTest;
+import br.com.productapi.models.entities.ProductTest;
+import br.com.productapi.models.entities.SupplierTest;
 import br.com.productapi.sales.dtos.SalesConfirmationDTOTest;
 import br.com.productapi.sales.dtos.responses.SalesProductResponseTest;
 import br.com.productapi.sales.enums.SalesStatusTest;
@@ -56,14 +56,17 @@ import static org.junit.Assert.assertTrue;
         ProductCheckStockRequestTest.class,
         ProductRequestTest.class,
         SupplierRequestTest.class,
-        CategoryRequestTest.class,
+        CategoryResponseTest.class,
         JwtResponseTest.class,
         ProductResponseTest.class,
         SalesResponseTest.class,
         SuccessResponseTest.class,
-        SupplierRequestTest.class,
+        SupplierResponseTest.class,
         ProductQuantityDTOTest.class,
         ProductStockDTOTest.class,
+        CategoryTest.class,
+        ProductTest.class,
+        SupplierTest.class,
         // sales dir
         SalesProductResponseTest.class,
         SalesConfirmationDTOTest.class,
