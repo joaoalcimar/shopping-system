@@ -34,19 +34,19 @@ public class CategoryService {
         return CategoryResponse.of(category);
     }
 
-    private void validateIdExistence(Integer id){
+    protected void validateIdExistence(Integer id){
         if(!categoryRepository.existsById(id)){
             throw new NotFoundException("There is no category for the given id.");
         }
     }
 
-    private void validateCategoryDescription(String description){
+    protected void validateCategoryDescription(String description){
         if(isEmpty(description)){
             throw new EmptyStringException("The category description was not informed.");
         }
     }
 
-    private void validateIdFormat(Integer id){
+    protected void validateIdFormat(Integer id){
         if(isEmpty(id)){
             throw new ValidationException("The category id must to be informed.");
         }

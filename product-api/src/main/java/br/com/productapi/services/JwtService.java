@@ -5,11 +5,12 @@ import br.com.productapi.configs.SecretsConfig;
 import br.com.productapi.exceptions.AuthenticationException;
 import br.com.productapi.models.dtos.responses.JwtResponse;
 import io.jsonwebtoken.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-
+@AllArgsConstructor
 @Service
 public class JwtService {
 
@@ -40,7 +41,7 @@ public class JwtService {
         }
     }
 
-    private String extractToken(String token) {
+    protected String extractToken(String token) {
         if (isEmpty(token)) {
             throw new AuthenticationException("The access token was not informed.");
         }
