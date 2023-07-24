@@ -1,11 +1,15 @@
 package br.com.productapi.models.entities;
 
 import br.com.productapi.models.dtos.requests.SupplierRequest;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "supplier")

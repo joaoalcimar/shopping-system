@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
         details.setStatus(HttpStatus.NOT_FOUND.value());
         details.setMessage(notFoundException.getMessage());
 
-        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AuthenticationException.class)
