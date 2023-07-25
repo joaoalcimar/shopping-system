@@ -8,6 +8,7 @@ import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.dtos.responses.SupplierResponse;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.SupplierRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
+@AllArgsConstructor
 public class SupplierService {
 
     @Autowired
@@ -34,19 +36,19 @@ public class SupplierService {
         return SupplierResponse.of(supplier);
     }
 
-    private void validateSupplierName(String name){
+    protected void validateSupplierName(String name){
         if(isEmpty(name)){
             throw new EmptyStringException("The supplier name was not informed.");
         }
     }
 
-    private void validateIdExistence(Integer id){
+    protected void validateIdExistence(Integer id){
         if(!supplierRepository.existsById(id)){
             throw new NotFoundException("There is no supplier for the given id.");
         }
     }
 
-    private void validateIdFormat(Integer id){
+    protected void validateIdFormat(Integer id){
         if(isEmpty(id)){
             throw new ValidationException("The supplier id must to be informed.");
         }
