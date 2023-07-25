@@ -3,7 +3,7 @@ name: Product Api Pipeline
 on: [push]
 
 jobs:
-  build application:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots package -DskipTests
         working-directory: product-api/
 
-  unit-testing:
+  verify-build:
     runs-on: ubuntu-latest
 
     steps:
