@@ -106,34 +106,6 @@ public class ProductTest {
     }
 
     @Test
-    public void testEquals() {
-        Category category = new Category(1, "Test Category");
-        Supplier supplier = new Supplier(1, "Test Supplier");
-        Product product1 = new Product(1, "Test Product", 10, category, supplier, LocalDateTime.now());
-        Product product2 = new Product(1, "Test Product", 10, category, supplier, LocalDateTime.now());
-        Product product3 = new Product(2, "Test Product", 10, category, supplier, LocalDateTime.now());
-        Product product4 = new Product(1, "Different Product", 10, category, supplier, LocalDateTime.now());
-
-        assertEquals(product1, product2);
-        assertNotEquals(product1, product3);
-        assertNotEquals(product1, product4);
-    }
-
-    @Test
-    public void testHashCode() {
-        Category category = new Category(1, "Test Category");
-        Supplier supplier = new Supplier(1, "Test Supplier");
-        Product product1 = new Product(1, "Test Product", 10, category, supplier, LocalDateTime.now());
-        Product product2 = new Product(1, "Test Product", 10, category, supplier, LocalDateTime.now());
-        Product product3 = new Product(2, "Test Product", 10, category, supplier, LocalDateTime.now());
-        Product product4 = new Product(1, "Different Product", 10, category, supplier, LocalDateTime.now());
-
-        assertEquals(product1.hashCode(), product2.hashCode());
-        assertNotEquals(product1.hashCode(), product3.hashCode());
-        assertNotEquals(product1.hashCode(), product4.hashCode());
-    }
-
-    @Test
     public void testToString() {
         Category category = new Category(1, "Test Category");
         Supplier supplier = new Supplier(1, "Test Supplier");

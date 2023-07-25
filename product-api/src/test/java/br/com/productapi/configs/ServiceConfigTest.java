@@ -24,7 +24,7 @@ public class ServiceConfigTest {
     @Test
     public void testSalesApiHost() {
         assertNotNull(serviceConfig);
-        String expectedAPIHost = "https://localhost:8082";
+        String expectedAPIHost = "http://localhost:8082";
         assertEquals(expectedAPIHost, serviceConfig.getSalesApiHost());
     }
 }
