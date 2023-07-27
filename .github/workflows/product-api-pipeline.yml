@@ -51,6 +51,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install libxml2-utils (for xmllint)
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+        working-directory: product-api/
+
       - name: Build and Test with JaCoCo
         run: mvn clean test jacoco:report
         working-directory: product-api/
