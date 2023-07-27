@@ -6,10 +6,15 @@ import br.com.productapi.exceptions.ValidationException;
 import feign.RequestTemplate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 public class FeignClientAuthInterceptorTest {
 
     private FeignClientAuthInterceptor interceptor;

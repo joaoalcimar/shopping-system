@@ -8,9 +8,12 @@ import org.junit.Test;
 
 import br.com.productapi.configs.SecretsConfig;
 import br.com.productapi.exceptions.AuthenticationException;
+import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class JwtServiceTest {
 
     private JwtService jwtService;

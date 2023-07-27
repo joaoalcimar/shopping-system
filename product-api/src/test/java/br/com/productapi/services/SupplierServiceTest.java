@@ -16,9 +16,12 @@ import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.dtos.responses.SupplierResponse;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.SupplierRepository;
+import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class SupplierServiceTest {
 
     private final SupplierRepository supplierRepository = mock(SupplierRepository.class);
