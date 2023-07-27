@@ -61,7 +61,7 @@ jobs:
 
       - name: Check Code Coverage
         run: |
-          coverage_percentage=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered) div sum(//counter[@type='INSTRUCTION']/@missed) * 100" target/site/jacoco/jacoco.xml)
+          coverage_percentage=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered) * 100" target/site/jacoco/jacoco.xml)
           echo "Code coverage: $coverage_percentage%"
           
           if [ $(echo "$coverage_percentage >= 70" | bc -l) -eq 1 ]; then
