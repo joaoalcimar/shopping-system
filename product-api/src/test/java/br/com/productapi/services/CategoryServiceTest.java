@@ -10,6 +10,7 @@ import java.util.Optional;
 import br.com.productapi.exceptions.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
 import br.com.productapi.exceptions.EmptyStringException;
@@ -20,8 +21,10 @@ import br.com.productapi.models.dtos.responses.SuccessResponse;
 import br.com.productapi.models.entities.Category;
 import br.com.productapi.repositories.CategoryRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class CategoryServiceTest {
 
     private final CategoryRepository categoryRepository = mock(CategoryRepository.class);
