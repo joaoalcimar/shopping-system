@@ -66,8 +66,8 @@ jobs:
           total_instructions=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered) + sum(//counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
           covered_instructions=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
 
-          echo "total_instructions: %total_instructions"
-          echo "covered_instructions: %covered_instructions"
+          echo "total_instructions: $total_instructions"
+          echo "covered_instructions: $covered_instructions"
           coverage_percentage=$(echo "scale=2; $covered_instructions / $total_instructions * 100" | bc -l)
           echo "Code coverage: $coverage_percentage%"
 
