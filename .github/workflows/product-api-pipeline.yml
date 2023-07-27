@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +21,7 @@ jobs:
         working-directory: product-api/
 
   verify-build:
+    name: unit-tests
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +38,7 @@ jobs:
         working-directory: product-api/
 
   coverage:
-    name: Code Coverage Check
+    name: code-quality
     runs-on: ubuntu-latest
 
     steps:
