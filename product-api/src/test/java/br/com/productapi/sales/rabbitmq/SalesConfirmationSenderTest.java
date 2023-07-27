@@ -4,12 +4,17 @@ import br.com.productapi.sales.dtos.SalesConfirmationDTO;
 import br.com.productapi.sales.enums.SalesStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class SalesConfirmationSenderTest {
 
     @Mock
