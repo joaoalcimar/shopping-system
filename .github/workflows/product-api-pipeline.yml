@@ -61,9 +61,16 @@ jobs:
 
       - name: Check Code Coverage
         run: |
-          coverage_percentage=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered) * 100" target/site/jacoco/jacoco.xml)
+          # Replace 'path_to_jacoco_report' with the actual path to the JaCoCo report XML file
+          # For example, if using Maven, it could be 'target/site/jacoco/jacoco.xml'
+          total_instructions=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered) + sum(//counter[@type='INSTRUCTION']/@missed)" target/site/jacoco/jacoco.xml)
+          covered_instructions=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
+
+          echo "total_instructions: %total_instructions"
+          echo "covered_instructions: %covered_instructions"
+          coverage_percentage=$(echo "scale=2; $covered_instructions / $total_instructions * 100" | bc -l)
           echo "Code coverage: $coverage_percentage%"
-          
+
           if [ $(echo "$coverage_percentage >= 70" | bc -l) -eq 1 ]; then
             echo "Code coverage is sufficient. Coverage passed!"
           else
