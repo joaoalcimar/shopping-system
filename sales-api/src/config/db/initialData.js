@@ -1,4 +1,5 @@
 import Order from "../../modules/sales/models/Order.js";
+import {v4 as uuid4} from "uuid";
 
 export async function createInitialData(){
     await Order.collection.drop();
@@ -24,7 +25,9 @@ export async function createInitialData(){
         },
         status: "APPROVED",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        transactionid: uuid4(),
+        serviceid: uuid4()
     });
     await Order.create({
         products: [
@@ -44,6 +47,8 @@ export async function createInitialData(){
         },
         status: "REJECTED",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        transactionid: uuid4(),
+        serviceid: uuid4()
     });
 }
