@@ -19,6 +19,7 @@ import br.com.productapi.sales.dtos.SalesConfirmationDTO;
 import br.com.productapi.sales.dtos.responses.SalesProductResponse;
 import br.com.productapi.sales.enums.SalesStatus;
 import br.com.productapi.sales.rabbitmq.SalesConfirmationSender;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class ProductService {
 
     private static final Integer ZERO = 0;

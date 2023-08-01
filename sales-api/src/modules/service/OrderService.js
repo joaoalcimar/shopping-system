@@ -11,24 +11,39 @@ class OrderService {
         try{
             let orderData = req.body;
 
+            const {transactionid, serviceid} = req.headers;
+            console.info(
+                `Request to POST new order with data ${JSON.stringify(orderData)} 
+                | [transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}]`
+            );
+
             const {authUser} = req;
             const {authorization} = req.headers;
 
             this.validateOrder(orderData);
 
-            let order = this.createInitialOrderData(orderData, authUser);
+            let order =
+                this.createInitialOrderData(orderData, authUser, transactionid, serviceid);
 
-            await this.validateProductStock(order, authorization);
+            await this.validateProductStock(order, authorization, transactionid);
 
             let createdOrder = await OrderRepository.save(order);
 
             this.sendMessage(createdOrder);
 
-            return {
+            let response = {
                 status: httpStatus.SUCCESS,
                 createdOrder
             }
-            
+
+            console.info(
+                `Request to POST new order with data ${JSON.stringify(response)} 
+                | transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}`
+            );
+            return response;
+
         }catch (err) {
             return{
                 status: err.status ? err.status : httpStatus.INTERNAL_SERVER_ERROR,
@@ -37,13 +52,15 @@ class OrderService {
         }
     }
 
-    createInitialOrderData(orderData, authUser){
+    createInitialOrderData(orderData, authUser, transactionid, serviceid){
         return {
             products: orderData.products,
             user: authUser,
             status: PENDING,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            transactionid: transactionid,
+            serviceid: serviceid
         };
     }
 
@@ -76,8 +93,8 @@ class OrderService {
         }
     }
 
-    async validateProductStock(order, token){
-        let isProductStockAvailable = await ProductClient.checkProductStock(order, token);
+    async validateProductStock(order, token, transactionid){
+        let isProductStockAvailable = await ProductClient.checkProductStock(order, token, transactionid);
         if(isProductStockAvailable){
             throw new OrderException(BAD_REQUEST, 'The stock is out for the products.');
         }
@@ -92,19 +109,41 @@ class OrderService {
 
     }
 
-    async findAll(){
-
+    async findAll(req){
         try{
+
+            const {transactionid, serviceid} = req.headers;
+            console.info(
+                `Request to GET all orders
+                | [transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}]`
+            );
+
             const allOrders = await OrderRepository.findAll();
 
             if(!allOrders){
                 throw new OrderException(NOT_FOUND, "No orders were not found.");
             }
 
-            return {
+            console.info(
+                `Request to GET all orders
+                | transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}`
+            );
+
+            let response = {
                 status: httpStatus.SUCCESS,
                 allOrders
             }
+
+            console.info(
+                `Request to GET all orders
+                | ${JSON.stringify(response)}
+                | transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}`
+            );
+
+            return response;
 
         }catch (err) {
             return{
@@ -118,6 +157,14 @@ class OrderService {
 
         try{
             const {id} = req.params;
+
+            const {transactionid, serviceid} = req.headers;
+            console.info(
+                `Request to GET an order by id: ${id}
+                | [transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}]`
+            );
+
             this.validateInformedId(id);
             const existingOrder = await OrderRepository.findById(id);
 
@@ -125,10 +172,19 @@ class OrderService {
                 throw new OrderException(NOT_FOUND, "The order was not found.");
             }
 
-            return {
+            let response = {
                 status: httpStatus.SUCCESS,
                 existingOrder
             }
+
+            console.info(
+                `Request to GET an order by id: ${id}
+                | ${JSON.stringify(response)}
+                | transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}`
+            );
+
+            return response;
 
         }catch (err) {
             return{
@@ -142,6 +198,14 @@ class OrderService {
 
         try{
             const {productId} = req.params;
+
+            const {transactionid, serviceid} = req.headers;
+            console.info(
+                `Request to GET an order by product id: ${productId}
+                | [transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}]`
+            );
+
             this.validateInformedId(productId);
             const orders = await OrderRepository.findByProductId(productId);
 
@@ -149,12 +213,21 @@ class OrderService {
                 throw new OrderException(NOT_FOUND, "The product was not found.");
             }
 
-            return {
+            let response = {
                 status: httpStatus.SUCCESS,
                 salesIds: orders.map((order) => {
                     return order.id;
                 })
             }
+
+            console.info(
+                `Request to GET an order by product id: ${productId}
+                | ${JSON.stringify(response)}
+                | transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}`
+            );
+
+            return response;
 
         }catch (err) {
             return{

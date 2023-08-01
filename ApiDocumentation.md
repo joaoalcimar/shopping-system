@@ -4,6 +4,24 @@
 * The Product-API application has 3 modules with several endpoints for products, categories, and suppliers.
 * The Sales-API application has only 4 endpoints.
 
+**Obs.: All endpoints of the Product-API and Sales-API services require the authorization and transactionid headers.**
+
+Required headers example:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6eyJpZCI6MSwibmFtZSI6IlVzZXIgVGVzdCAxIiwiZW1haWwiOiJ0ZXN0ZXVzZXIxQGdtYWlsLmNvbSJ9LCJpYXQiOjE2MzM3OTk5MzUsImV4cCI6MTYzMzg4NjMzNX0.2AWPeoHSYUW_nGeLsx6rEOhm99ZfNZ8pQXPTJ0fwbDU
+transactionid: 843e5420-e767-45f3-aee3-ca9a16233352
+```
+
+If the transactionid is not sent, the response will be:
+
+```json
+{
+    "status": 400,
+    "message": "The transactionid header is required."
+}
+```
+
 # Auth-API
 
 ## Base URL: http://localhost:8080
@@ -30,22 +48,6 @@ Response:
 {
     "status": 200,
     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6eyJpZCI6MSwibmFtZSI6IlVzZXIgVGVzdCAxIiwiZW1haWwiOiJ0ZXN0ZXVzZXIxQGdtYWlsLmNvbSJ9LCJpYXQiOjE2MzM3OTk5MzUsImV4cCI6MTYzMzg4NjMzNX0.2AWPeoHSYUW_nGeLsx6rEOhm99ZfNZ8pQXPTJ0fwbDU"
-}
-```
-
-**Obs.: All endpoints of the Product-API and Sales-API services require the authorization and transactionid headers.**
-
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6eyJpZCI6MSwibmFtZSI6IlVzZXIgVGVzdCAxIiwiZW1haWwiOiJ0ZXN0ZXVzZXIxQGdtYWlsLmNvbSJ9LCJpYXQiOjE2MzM3OTk5MzUsImV4cCI6MTYzMzg4NjMzNX0.2AWPeoHSYUW_nGeLsx6rEOhm99ZfNZ8pQXPTJ0fwbDU
-transactionid: 843e5420-e767-45f3-aee3-ca9a16233352
-```
-
-If the transactionid is not sent, the response will be:
-
-```json
-{
-    "status": 400,
-    "message": "The transactionid header is required."
 }
 ```
 
