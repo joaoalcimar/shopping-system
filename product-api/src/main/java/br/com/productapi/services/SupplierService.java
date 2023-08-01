@@ -9,6 +9,7 @@ import br.com.productapi.models.dtos.responses.SupplierResponse;
 import br.com.productapi.models.entities.Supplier;
 import br.com.productapi.repositories.SupplierRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class SupplierService {
 
     @Autowired
