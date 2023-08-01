@@ -65,6 +65,14 @@ class UserService {
 
     async getAccessToken(req) {
         try{
+
+            const {transactionid, serviceid} = req.headers;
+            console.info(
+                `Request to POST Login with data ${JSON.stringify(req.body)} 
+                | [transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}]`
+            );
+
             const {email, password} = req.body;
             this.validateAccessTokenData(email,password);
 
@@ -75,10 +83,17 @@ class UserService {
             let authUser = {id: user.id, name: user.name, email: user.email}
             const accessToken = jwt.sign({authUser}, secrets.apiSecret, {expiresIn: '1d'});
 
-            return {
+            let response = {
                 status: httpStatus.SUCCESS,
                 accessToken
             }
+
+            console.info(
+                `Request to POST Login with data ${JSON.stringify(response)} 
+                | transactionalId: ${transactionid} 
+                | serviceId: ${serviceid}`
+            );
+            return response;
         }catch (err){
             return{
                 status: err.status ? err.status : httpStatus.INTERNAL_SERVER_ERROR,
