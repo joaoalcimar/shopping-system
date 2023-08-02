@@ -28,7 +28,7 @@ app.get('/api/status', (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.info(`Server started succcessfuly at port ${PORT}`);
+    console.info(`Server started successfully at port ${PORT}`);
 })
 
 

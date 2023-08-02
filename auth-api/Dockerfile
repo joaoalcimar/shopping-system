@@ -1,20 +1,17 @@
-# Define a imagem base
-FROM node:14-alpine
+FROM node:14
 
-# Define o diretório de trabalho dentro do contêiner
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 WORKDIR .
 
-# Copia os arquivos de configuração do projeto
-COPY package.json yarn.lock ./
+COPY package*.json ./
 
-# Instala as dependências usando o Yarn
-RUN yarn install --production
+ENV GENERATE_SOURCEMAP=false
 
-# Copia o código-fonte para o contêiner
+RUN yarn
+
 COPY . .
 
-# Exponhe a porta 8080
 EXPOSE 8080
 
-# Define o comando para iniciar a aplicação Node.js
-CMD ["node", "app.js"]
+CMD ["yarn", "startDev"]
